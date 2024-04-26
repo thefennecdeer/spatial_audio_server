@@ -6,7 +6,7 @@ use metres::Metres;
 use nannou;
 use nannou::prelude::*;
 use nannou::wgpu::TextureUsages;
-use nannou_egui::Egui;
+use nannou_egui::egui;
 use osc;
 use osc::input::Log as OscInputLog;
 use osc::output::Log as OscOutputLog;
