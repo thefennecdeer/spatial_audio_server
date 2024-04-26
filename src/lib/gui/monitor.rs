@@ -6,7 +6,7 @@
 //! not require performing some kind of I/O depending on the platform, in turn taking an
 //! unpredictable amount of time.
 
-use crossbeam::sync::{MsQueue, SegQueue};
+use crossbeam::queue::SegQueue;
 use gui;
 use nannou;
 use std::io;
@@ -14,7 +14,7 @@ use std::sync::Arc;
 use std::sync::atomic::{self, AtomicBool};
 use std::thread;
 
-pub type Sender = Arc<MsQueue<gui::AudioMonitorMessage>>;
+pub type Sender = Arc<SegQueue<gui::AudioMonitorMessage>>;
 pub type Receiver = Arc<SegQueue<gui::AudioMonitorMessage>>;
 pub type Spawned = (Monitor, Sender, Receiver);
 
@@ -40,7 +40,7 @@ impl Monitor {
 
 /// Spawn the intermediary monitoring thread and return the communication channels.
 pub fn spawn(app_proxy: nannou::app::Proxy) -> io::Result<Spawned> {
-    let audio_queue = Arc::new(MsQueue::new());
+    let audio_queue = Arc::new(SegQueue::new());
     let audio_tx = audio_queue.clone();
     let audio_rx = audio_queue;
 

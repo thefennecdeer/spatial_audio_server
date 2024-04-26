@@ -2,19 +2,17 @@
 #![recursion_limit = "256"]
 
 #[macro_use]
-extern crate conrod_core;
-#[macro_use]
-extern crate conrod_derive;
 extern crate crossbeam;
 #[macro_use]
-extern crate custom_derive;
+extern crate macro_attr_2018;
 extern crate fxhash;
 extern crate hound; // wav loading
 extern crate nannou;
 extern crate nannou_audio;
 extern crate nannou_osc;
+extern crate nannou_egui;
 #[macro_use]
-extern crate newtype_derive;
+extern crate newtype_derive_2018;
 extern crate num_cpus;
 extern crate pitch_calc;
 extern crate rand_xorshift;

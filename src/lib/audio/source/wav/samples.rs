@@ -1,5 +1,5 @@
 use hound;
-use nannou_audio::sample::{FromSample, Sample};
+use nannou_audio::dasp_sample::{FromSample, Sample};
 use std::io;
 
 /// Retrieve the next sample from the given wav reader samples iterator and yield it in the sample

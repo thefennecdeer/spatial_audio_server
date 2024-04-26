@@ -1,4 +1,4 @@
-use crossbeam::sync::MsQueue;
+use crossbeam::queue::SegQueue;
 use fxhash::FxHashMap;
 use installation;
 use nannou_osc as osc;
@@ -7,7 +7,7 @@ use std;
 use std::iter::once;
 use std::sync::{mpsc, Arc};
 
-pub type MessageQueue = Arc<MsQueue<Message>>;
+pub type MessageQueue = Arc<SegQueue<Message>>;
 pub type Tx = MessageQueue;
 type Rx = MessageQueue;
 
@@ -79,7 +79,7 @@ pub struct Log {
 
 /// Spawn the osc sender thread.
 pub fn spawn() -> (std::thread::JoinHandle<()>, Tx, mpsc::Receiver<Log>) {
-    let msg_queue = Arc::new(MsQueue::new());
+    let msg_queue = Arc::new(SegQueue::new());
     let msg_tx = msg_queue.clone();
     let msg_rx = msg_queue;
     let (log_tx, log_rx) = mpsc::channel();

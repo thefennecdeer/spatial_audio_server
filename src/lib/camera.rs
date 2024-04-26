@@ -1,9 +1,8 @@
 use metres::Metres;
-use nannou::geom::Point2;
-use nannou::ui::Scalar;
-
+use serde::{Deserialize, Serialize};
+type Scalar = f64;
 /// A 2D camera location in exhibition space.
-pub type Point = Point2<Metres>;
+pub type Point = nannou::glam::DVec2;
 
 /// Items related to the camera that provides a view of the floorplan.
 #[derive(Debug, Serialize, Deserialize)]

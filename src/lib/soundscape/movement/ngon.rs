@@ -1,13 +1,14 @@
 use audio;
-use metres::Metres;
 use nannou::prelude::*;
 use std::time;
 use super::BoundingRect;
-use utils::{duration_to_secs, pt2};
+use utils::duration_to_secs;
+use nannou::glam::DVec2 as Vector2;
+
 
 // The point and vector types in exhibition space.
-type Point = Point2<Metres>;
-type Vector = Vector2<Metres>;
+type Point = Vector2;
+type Vector = Vector2;
 
 /// A 2D N-sided, symmetrical polygon path tracing movement implementation.
 ///
@@ -24,7 +25,7 @@ pub struct Ngon {
     ///
     /// `0.0` means all points will be in the center.
     /// `1.0` means all points will extend to the bounds of the installation area.
-    pub normalised_dimensions: Vector2<f64>,
+    pub normalised_dimensions: Vector2,
     /// Some rotation that is applied to the Ngon's points around the centre.
     pub radians_offset: f64,
     /// The rate at which the path is being travelled in metres per second.
@@ -64,7 +65,7 @@ impl Ngon {
     pub fn new(
         vertices: usize,
         nth: usize,
-        normalised_dimensions: Vector2<f64>,
+        normalised_dimensions: Vector2,
         radians_offset: f64,
         speed: f64,
         installation_bounding_rect: &BoundingRect,
@@ -107,14 +108,14 @@ fn vertex_at_index(
     let radians = step * 2.0 * PI_F64 + radians_offset;
     let x = middle.x + half_dimensions.x * radians.cos();
     let y = middle.y + half_dimensions.y * radians.sin();
-    Point2 { x, y }
+    Point::new(x, y)
 }
 
 // The middle of the given bounding rect and normalised dimensions halved read for use within the
 // `vertex_at_index` function.
 fn middle_and_half_dimensions(
     bounding_rect: &BoundingRect,
-    normalised_dimensions: Vector2<f64>,
+    normalised_dimensions: Vector2,
 ) -> (Point, Vector)
 {
     let middle = bounding_rect.middle();
@@ -122,7 +123,7 @@ fn middle_and_half_dimensions(
     let height = bounding_rect.height() * normalised_dimensions.y;
     let half_width = width * 0.5;
     let half_height = height * 0.5;
-    let half_dimensions = Vector2 { x: half_width, y: half_height };
+    let half_dimensions = Point::new(half_width, half_height);
     (middle, half_dimensions)
 }
 
@@ -156,16 +157,16 @@ impl Ngon {
         // Determine the current position of the Ngon tracer.
         let mut travel_distance = speed * duration_to_secs(delta_time);
         let (point, lerp) = loop {
-            let start = pt2::to_f64(vertex_at_index(state.position.line.start));
-            let end = pt2::to_f64(vertex_at_index(state.position.line.end));
-            let vec = start.to_vec().lerp(end.to_vec(), state.position.lerp);
-            let point = pt2(vec.x, vec.y);
+            let start = vertex_at_index(state.position.line.start);
+            let end = vertex_at_index(state.position.line.end);
+            let vec = start.lerp(end, state.position.lerp);
+            let point = Point::new(vec.x, vec.y);
             let distance = point.distance(end).abs();
 
             // If there's no distance to travel, make sure the point is up to date with the
             // installation bounds and return.
             if travel_distance == 0.0 || distance == 0.0 {
-                state.sound_position.point = pt2::to_metres(point);
+                state.sound_position.point = point;
                 return;
             }
 
@@ -184,7 +185,7 @@ impl Ngon {
                 } else {
                     0.0
                 };
-                let new_point = pt2::to_metres(new_point);
+                let new_point = new_point;
                 break (new_point, new_lerp);
             }
             travel_distance -= distance;

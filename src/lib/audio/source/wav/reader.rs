@@ -2,7 +2,7 @@
 //! audio thread.
 
 use audio::{self, sound};
-use crossbeam::sync::{MsQueue, SegQueue};
+use crossbeam::queue::SegQueue;
 use fxhash::FxHashMap;
 use hound::{self, SampleFormat};
 use num_cpus;
@@ -26,10 +26,10 @@ const NUM_BUFFERS: usize = 4;
 pub type WavReader = hound::WavReader<BufReader<File>>;
 
 /// Sends messages to the `wav::reader` thread.
-pub type Tx = Arc<MsQueue<Message>>;
+pub type Tx = Arc<SegQueue<Message>>;
 
 /// Receives `Message`s for the `wav::reader` thread.
-pub type Rx = Arc<MsQueue<Message>>;
+pub type Rx = Arc<SegQueue<Message>>;
 
 /// For sending buffers to a sound's associated `ThreadedSamplesStream`.
 pub type BufferTx = Arc<SegQueue<Buffer>>;
@@ -38,7 +38,7 @@ pub type BufferTx = Arc<SegQueue<Buffer>>;
 pub type BufferRx = Arc<SegQueue<Buffer>>;
 
 /// The mpmc queue used for distributing `Play` messages across the child threads.
-type ChildMessageQueue = MsQueue<ChildMessage>;
+type ChildMessageQueue = SegQueue<ChildMessage>;
 
 /// A unique identifier associated with a child thread.
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
@@ -487,7 +487,7 @@ fn read_next_sample(
 /// Runs the wav reader thread and returns a handle to it that may be used to play or seek sounds
 /// via their unique `Id`.
 pub fn spawn() -> Handle {
-    let queue = Arc::new(MsQueue::new());
+    let queue = Arc::new(SegQueue::new());
     let tx = queue.clone();
     let rx = queue;
     let tx2 = tx.clone();

@@ -1,14 +1,12 @@
-custom_derive! {
-    /// Used for describing locations throughout the installation.
-    ///
-    /// Using this GUI agnostic measurement greatly simplifies positioning and makes it easier
+use macro_attr_2018::macro_attr;
+use newtype_derive_2018::*;
+macro_attr! {
+
     #[derive(Copy, Clone, Debug, Default, PartialEq, PartialOrd,
-             NewtypeFrom,
-             NewtypeAdd, NewtypeSub, NewtypeMul, NewtypeMul(f64), NewtypeDiv, NewtypeDiv(f64),
-             NewtypeAddAssign, NewtypeSubAssign, NewtypeMulAssign, NewtypeDivAssign,
-             NewtypeMulAssign(f64), NewtypeDivAssign(f64),
-             NewtypeRem, NewtypeRemAssign,
-             NewtypeNeg)]
+             NewtypeFrom!,
+             NewtypeAdd!, NewtypeSub!, NewtypeMul!, NewtypeMul!(f64), NewtypeDiv!, NewtypeDiv!(f64),
+             NewtypeRem!,
+             NewtypeNeg!)]
     #[derive(Serialize, Deserialize)]
     pub struct Metres(pub f64);
 }

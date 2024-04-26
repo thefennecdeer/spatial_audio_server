@@ -86,7 +86,7 @@ pub struct Soundscape {
 #[derive(Clone, Debug)]
 pub struct Speaker {
     /// The position of the speaker in metres.
-    pub point: Point2<Metres>,
+    pub point: Point2,
     /// All installations assigned to the speaker.
     pub installations: FxHashSet<installation::Id>,
 }
@@ -816,20 +816,14 @@ fn closest_assigned_installation(
 ) -> Option<installation::Id>
 {
     if let Some(source) = sources.get(&sound.source_id) {
-        let sound_point = Point2 {
-            x: sound.position.x.0,
-            y: sound.position.y.0,
-        };
+        let sound_point = Point2::new(sound.position.point.x, sound.position.point.y) ;
         let mut distances = source
             .constraints
             .installations
             .iter()
             .filter_map(|&i| installation_areas.get(&i).map(|a| (i, a)))
             .map(|(i, a)| {
-                let centroid = Point2 {
-                    x: a.centroid.x.0,
-                    y: a.centroid.y.0,
-                };
+                let centroid =  Point2::new(a.centroid.x, a.centroid.y) ;
                 (i, sound_point.distance2(centroid))
             });
         if let Some((i, dist)) = distances.next() {

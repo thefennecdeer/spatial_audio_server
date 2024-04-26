@@ -1,12 +1,12 @@
-use fxhash::FxHashSet;
-use installation;
+use crate::installation;
+use crate::soundscape;
+use crate::utils::{self, Range};
 use metres::Metres;
+use fxhash::FxHashSet;
 use nannou::math::map_range;
 use nannou::rand::Rng;
-use soundscape;
 use std::ops;
 use time_calc::{Ms, Samples};
-use utils::{self, Range};
 
 pub use self::movement::Movement;
 pub use self::realtime::Realtime;
