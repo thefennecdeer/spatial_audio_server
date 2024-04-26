@@ -1,12 +1,11 @@
 //! A visual representation of a `Sound` for displaying over the floorplan.
 
 use metres::Metres;
-use nannou::ui::Color;
-use nannou::ui::prelude::*;
+use nannou_egui::egui::Color32;
 use std;
 use utils;
 
-#[derive(Clone, WidgetCommon)]
+#[derive(Clone, Default)]
 pub struct Sound<'a> {
     #[conrod(common_builder)]
     common: widget::CommonBuilder,

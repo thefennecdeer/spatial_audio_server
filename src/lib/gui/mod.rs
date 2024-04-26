@@ -5,8 +5,8 @@ use fxhash::FxHashMap;
 use metres::Metres;
 use nannou;
 use nannou::prelude::*;
-use nannou::ui;
-use nannou::ui::prelude::*;
+use nannou::wgpu::TextureUsages;
+use nannou_egui::Egui;
 use osc;
 use osc::input::Log as OscInputLog;
 use osc::output::Log as OscOutputLog;
@@ -47,7 +47,7 @@ type ActiveSoundMap = FxHashMap<audio::sound::Id, ActiveSound>;
 /// This is the primary state stored on the main thread.
 pub struct Model {
     /// The nannou UI state.
-    pub ui: Ui,
+    pub egui: Egui,
     /// The currently selected project.
     pub project: Option<(Project, ProjectState)>,
     /// Whether or not the GUI is currently in CPU-saving mode.
@@ -307,7 +307,7 @@ impl Model {
             // The wgpu device queue used to load the image data.
             let mut queue = window.swap_chain_queue().lock().unwrap();
             // Describe how we will use the texture so that the GPU may handle it efficiently.
-            let usage = wgpu::TextureUsage::SAMPLED;
+            let usage = TextureUsages::TEXTURE_BINDING;
             wgpu::Texture::load_from_image_buffer(device, &mut *queue, usage, &image_rgba)
         };
         let [width, height] = floorplan_texture.size();

@@ -3,6 +3,7 @@
 
 #[macro_use]
 extern crate crossbeam;
+extern crate dasp;
 #[macro_use]
 extern crate macro_attr_2018;
 extern crate fxhash;

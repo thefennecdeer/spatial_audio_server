@@ -1,6 +1,6 @@
 //! Items related to the realtime audio input sound source kind.
 
-use crossbeam::sync::SegQueue;
+use crossbeam::queue::SegQueue;
 use std::mem;
 use std::ops;
 use std::sync::{atomic, Arc};
